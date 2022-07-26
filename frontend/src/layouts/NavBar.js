@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTheme } from "../services/theme/slice";
 import { logout } from "../services/auth/slice";
 
-function PricingContent() {
+function NavBar() {
   const dispatch = useDispatch();
   const { mode } = useSelector((state) => state.theme);
 
@@ -57,6 +57,4 @@ function PricingContent() {
   );
 }
 
-export default function Pricing() {
-  return <PricingContent />;
-}
+export default React.memo(NavBar);
