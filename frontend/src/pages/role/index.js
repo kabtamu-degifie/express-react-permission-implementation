@@ -44,9 +44,11 @@ function Role() {
     isSuccess: roleSuccess,
     isLoading: roleLoading,
   } = useSelector((state) => state.roles);
+
   // did mount effect
   useEffect(() => {
     dispatch(fetchPermissions());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // dispatch + did mount effect
@@ -256,15 +258,22 @@ function Role() {
 
               <Stack direction="row" spacing={2} alignItems="center">
                 <Button
+                  fullWidth
                   onClick={handleRolePermissionUpdate}
                   size="medium"
                   variant="outlined"
+                  sx={{ minWidth: 200 }}
                   startIcon={<PublishedWithChanges />}
                 >
                   Save Changes
                 </Button>
 
-                <Button size="medium" variant="contained" startIcon={<Add />}>
+                <Button
+                  fullWidth
+                  size="medium"
+                  variant="contained"
+                  startIcon={<Add />}
+                >
                   Add
                 </Button>
               </Stack>
