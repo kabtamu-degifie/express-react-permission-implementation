@@ -7,7 +7,7 @@ const get = async (req, res) => {
 };
 
 const all = async (req, res) => {
-  const roles = await Role.find();
+  const roles = await Role.find().populate("permissions");
   res.status(200).send(roles);
 };
 
@@ -29,8 +29,8 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   const { id } = req.params;
-  const validation = validateRole({ ...req.body, id });
-  if (validation.error) return res.send(validation.error.details[0].message);
+  // const validation = validateRole({ ...req.body, id });
+  // if (validation.error) return res.send(validation.error.details[0].message);
 
   let role = await Role.findById(id);
   if (!role) return res.status(404).send("Role is not found");
