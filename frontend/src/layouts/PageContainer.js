@@ -1,10 +1,7 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Container } from "@mui/material";
 import NavBar from "./NavBar";
-import ProtectedRoute from "../ProtectedRoute";
-import Dashboard from "../pages/dashboard";
-import Role from "../pages/role";
 
 function PageContainer() {
   return (
@@ -16,17 +13,7 @@ function PageContainer() {
         component="main"
         sx={{ pt: 2, pb: 6 }}
       >
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route
-            path="role"
-            element={
-              <ProtectedRoute>
-                <Role />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+        <Outlet />
       </Container>
     </>
   );

@@ -9,6 +9,8 @@ import Register from "./pages/user";
 
 import PageContainer from "./layouts/PageContainer";
 import ProtectedRoute from "./ProtectedRoute";
+import Role from "./pages/role";
+import { Dashboard } from "@mui/icons-material";
 
 const App = () => {
   const { mode: theme } = useSelector((state) => state.theme);
@@ -20,14 +22,24 @@ const App = () => {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route
-              path="/*"
-              element={
-                <ProtectedRoute>
-                  <PageContainer />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/" element={<PageContainer />}>
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="role"
+                element={
+                  <ProtectedRoute>
+                    <Role />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
             <Route path="*" element={<h1>404! Page Not Found</h1>} />
           </Routes>
         </BrowserRouter>
