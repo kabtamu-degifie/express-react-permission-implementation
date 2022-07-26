@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,12 +7,14 @@ import { LightMode, Nightlight } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { NavLink } from "react-router-dom";
 
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setTheme } from "../services/theme/slice";
 import { logout } from "../services/auth/slice";
 
 function NavBar() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { mode } = useSelector((state) => state.theme);
 
   const toggleThemeMode = () => {
@@ -21,6 +23,7 @@ function NavBar() {
 
   const logoutHandler = () => {
     dispatch(logout());
+    navigate("/login");
   };
 
   return (

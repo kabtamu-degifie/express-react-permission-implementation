@@ -24,7 +24,7 @@ const App = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/" element={<PageContainer />}>
               <Route
-                path="/dashboard"
+                path="dashboard"
                 element={
                   <ProtectedRoute>
                     <Dashboard />

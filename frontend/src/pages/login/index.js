@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 import { login, reset } from "../../services/auth/slice";
+import { getLoggedInUser } from "../../libs/local-storage";
 
 export default function SignIn() {
   const dispatch = useDispatch();
@@ -23,9 +24,12 @@ export default function SignIn() {
 
   useEffect(() => {
     if (isSuccess && token) {
-      console.log(location.state);
       dispatch(reset());
       navigate(location.state ? location.state : "/");
+    }
+
+    if (getLoggedInUser()) {
+      navigate("/dashboard");
     }
   }, [token, location, isSuccess, navigate, dispatch]);
 
