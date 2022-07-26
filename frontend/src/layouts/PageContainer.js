@@ -1,9 +1,10 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import ProtectedRoute from "../ProtectedRoute";
-import Role from "../pages/role";
-import NavBar from "./NavBar";
 import { Container } from "@mui/material";
+import NavBar from "./NavBar";
+import ProtectedRoute from "../ProtectedRoute";
+import Dashboard from "../pages/dashboard";
+import Role from "../pages/role";
 
 function PageContainer() {
   return (
@@ -16,6 +17,7 @@ function PageContainer() {
         sx={{ pt: 2, pb: 6 }}
       >
         <Routes>
+          <Route path="/" element={<Dashboard />} />
           <Route
             path="role"
             element={

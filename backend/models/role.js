@@ -16,6 +16,7 @@ const validateRole = (role) => {
   const schema = Joi.object({
     id: Joi.objectId(),
     name: Joi.string().required().label("Name"),
+    permissions: Joi.array(),
   });
   return schema.validate(role);
 };

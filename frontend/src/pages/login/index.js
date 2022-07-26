@@ -23,6 +23,7 @@ export default function SignIn() {
 
   useEffect(() => {
     if (isSuccess && token) {
+      console.log(location.state);
       dispatch(reset());
       navigate(location.state ? location.state : "/");
     }

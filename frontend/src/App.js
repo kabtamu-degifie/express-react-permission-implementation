@@ -8,6 +8,7 @@ import Login from "./pages/login";
 import Register from "./pages/user";
 
 import PageContainer from "./layouts/PageContainer";
+import ProtectedRoute from "./ProtectedRoute";
 
 const App = () => {
   const { mode: theme } = useSelector((state) => state.theme);
@@ -19,7 +20,14 @@ const App = () => {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/*" element={<PageContainer />} />
+            <Route
+              path="/*"
+              element={
+                <ProtectedRoute>
+                  <PageContainer />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<h1>404! Page Not Found</h1>} />
           </Routes>
         </BrowserRouter>
