@@ -1,12 +1,14 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import authReducer from "../services/Auth/auth.slice";
-import userReducer from "../services/User/user.slice";
-import permissionReducer from "../services/Permission/permission.slice";
-import roleReducer from "../services/Role/role.slice";
+import authReducer from "../services/Auth/slice";
+import userReducer from "../services/User/slice";
+import permissionReducer from "../services/Permission/slice";
+import roleReducer from "../services/Role/slice";
+import themeReducer from "../services/Theme/slice";
 
 export default combineReducers({
   auth: authReducer,
   user: userReducer,
   permissions: permissionReducer,
   roles: roleReducer,
+  theme: themeReducer,
 });

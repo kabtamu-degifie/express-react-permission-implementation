@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import permissionService from "./permission.service";
+import permissionService from "./service";
 
 const initialState = {
   permissions: null,
