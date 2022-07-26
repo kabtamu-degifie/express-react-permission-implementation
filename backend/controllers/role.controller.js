@@ -29,15 +29,18 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   const { id } = req.params;
-  // const validation = validateRole({ ...req.body, id });
-  // if (validation.error) return res.send(validation.error.details[0].message);
+  const roleData = { name: req.body.name, permissions: req.body.permissions };
+
+  const validation = validateRole({ ...roleData, id });
+  if (validation.error)
+    return res.status(400).send(validation.error.details[0].message);
 
   let role = await Role.findById(id);
   if (!role) return res.status(404).send("Role is not found");
 
   let otherRole = await Role.findOne().and([
     {
-      name: req.body.name,
+      name: roleData.name,
       _id: { $ne: role.id },
     },
   ]);
@@ -45,13 +48,12 @@ const update = async (req, res) => {
   if (otherRole)
     return res
       .status(400)
-      .send(`The name '${req.body.name}' has already taken.`);
-
+      .send(`The name '${roleData.name}' has already taken.`);
   role = await Role.findByIdAndUpdate(
     id,
     {
       $set: {
-        ...req.body,
+        ...roleData,
       },
     },
     {
