@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { setItem } from "../../libs/local-storage";
+import { getItem, setItem } from "../../libs/local-storage";
 
 const initialState = {
-  mode: "light",
+  mode: getItem("theme") ? getItem("theme") : "light",
 };
 
 export const setTheme = createAsyncThunk("theme/set", (theme) => {

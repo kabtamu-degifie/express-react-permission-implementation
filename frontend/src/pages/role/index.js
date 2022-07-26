@@ -245,7 +245,11 @@ function Role() {
                     onChange={selectRoleIdHandler}
                   >
                     {roles.map((role) => (
-                      <MenuItem key={role._id} value={role._id}>
+                      <MenuItem
+                        sx={{ textTransform: "capitalize" }}
+                        key={role._id}
+                        value={role._id}
+                      >
                         {role.name}
                       </MenuItem>
                     ))}

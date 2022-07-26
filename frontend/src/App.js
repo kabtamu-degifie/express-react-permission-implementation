@@ -11,6 +11,7 @@ import PageContainer from "./layouts/PageContainer";
 
 const App = () => {
   const { mode: theme } = useSelector((state) => state.theme);
+
   return (
     <ThemeProvider theme={appTheme(theme)}>
       <CssBaseline>
