@@ -22,12 +22,159 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import { hasPermission } from "../../libs/local-storage";
-import { fetch as fetchPermissions } from "../../services/permission/slice";
+import {
+  fetch as fetchPermissions,
+  reset as permissionReset,
+} from "../../services/permission/slice";
 import {
   fetch as fetchRoles,
   update as updateRole,
+  reset as roleReset,
 } from "../../services/role/slice";
 import { Add, PublishedWithChanges } from "@mui/icons-material";
+
+const Header = React.memo(
+  ({
+    roleId,
+    selectHandler,
+    roles,
+    role,
+    roleLoading,
+    rolePermissionUpdateHandler,
+  }) => {
+    return (
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        justifyContent="space-between"
+        spacing={2}
+      >
+        <Stack spacing={2} alignItems="center" direction="row">
+          <FormControl fullWidth>
+            <InputLabel id="role">Role</InputLabel>
+            <Select
+              sx={{ textTransform: "capitalize" }}
+              labelId="role-label"
+              id="role"
+              value={roleId}
+              label="Role"
+              onChange={selectHandler}
+            >
+              {roles.map((role) => (
+                <MenuItem
+                  sx={{ textTransform: "capitalize" }}
+                  key={role._id}
+                  value={role._id}
+                >
+                  {role.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Typography variant="h5" sx={{ textTransform: "capitalize" }}>
+            {role.name}
+          </Typography>
+        </Stack>
+
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Button
+            disabled={roleLoading}
+            fullWidth
+            onClick={rolePermissionUpdateHandler}
+            size="medium"
+            variant="outlined"
+            sx={{ minWidth: 200 }}
+            startIcon={<PublishedWithChanges />}
+          >
+            Save Changes
+          </Button>
+
+          <Button
+            fullWidth
+            size="medium"
+            variant="contained"
+            startIcon={<Add />}
+          >
+            Add
+          </Button>
+        </Stack>
+      </Stack>
+    );
+  }
+);
+
+const RoleTable = React.memo(
+  ({
+    cells,
+    roleLoading,
+    permissionLoading,
+    checkAllHandler,
+    checkIndividualHandler,
+    checkForIndeterminate,
+    checkForAllChecked,
+    groupedPermissions,
+    roleHasPermission,
+  }) => {
+    return (
+      <Paper sx={{ width: "100%", overflow: "hidden" }}>
+        <TableContainer sx={{ maxHeight: 440 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Activity</TableCell>
+                {cells.map((cell) => (
+                  <TableCell key={cell}>
+                    <FormControlLabel
+                      disabled={
+                        roleLoading ||
+                        permissionLoading ||
+                        !hasPermission("update_role")
+                      }
+                      onChange={(e) => checkAllHandler(e, cell)}
+                      id={cell}
+                      label={cell}
+                      control={
+                        <Checkbox
+                          indeterminate={checkForIndeterminate(cell)}
+                          checked={checkForAllChecked(cell)}
+                        />
+                      }
+                    />
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {groupedPermissions.map((group) => (
+                <TableRow key={group.name} hover role="checkbox">
+                  <TableCell>{group.name}</TableCell>
+                  {group.permissions.map((permission) => (
+                    <TableCell key={permission._id}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            id={permission._id}
+                            name={permission._id}
+                            disabled={
+                              roleLoading || !hasPermission("update_role")
+                            }
+                            checked={roleHasPermission(permission._id)}
+                            onChange={(e) =>
+                              checkIndividualHandler(e, permission, group)
+                            }
+                          />
+                        }
+                      />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+    );
+  }
+);
 
 function Role() {
   const [selectedRoleId, setSelectedRoleId] = useState("");
@@ -35,9 +182,11 @@ function Role() {
 
   const dispatch = useDispatch();
 
-  const { permissions, isLoading: permissionLoading } = useSelector(
-    (state) => state.permissions
-  );
+  const {
+    permissions,
+    isSuccess: permissionSuccess,
+    isLoading: permissionLoading,
+  } = useSelector((state) => state.permissions);
 
   const {
     roles,
@@ -54,6 +203,13 @@ function Role() {
   // dispatch + did mount effect
   useEffect(() => {
     dispatch(fetchRoles());
+    if (roleSuccess || roles) {
+      dispatch(roleReset());
+    }
+    if (permissionSuccess || permissions) {
+      dispatch(permissionReset());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   // state + did mount effect
@@ -133,7 +289,7 @@ function Role() {
   };
 
   // Select one: for single permission
-  const checkIndividual = (event, permission, group) => {
+  const checkIndividualHandler = (event, permission, group) => {
     const selectedRolePerms = [...selectedRole.permissions];
 
     const index = selectedRolePerms.findIndex((p) => p._id === permission._id);
@@ -212,141 +368,82 @@ function Role() {
 
   const headerCells = ["view", "create", "update", "remove"];
 
+  let permissionsContent = null;
+  if (permissionLoading) {
+    permissionsContent = <Skeleton height={100} />;
+  } else {
+    if (permissions && selectedRole) {
+      permissionsContent = (
+        <Box>
+          <RoleTable
+            cells={headerCells}
+            roleLoading={roleLoading}
+            permissionLoading={permissionLoading}
+            checkAllHandler={checkAllHandler}
+            checkIndividualHandler={checkIndividualHandler}
+            checkForIndeterminate={checkForIndeterminate}
+            checkForAllChecked={checkForAllChecked}
+            groupedPermissions={groupPermissions()}
+            roleHasPermission={roleHasPermission}
+          />
+        </Box>
+      );
+    } else {
+      permissionsContent = (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "10vh",
+          }}
+        >
+          <Typography variant="h5">
+            No permissions added yet. Please contact your admin.
+          </Typography>
+        </Box>
+      );
+    }
+  }
+
+  let rolesContent = null;
+  if (roleLoading) {
+    rolesContent = <Skeleton height={200} />;
+  } else {
+    if (roles) {
+      rolesContent = (
+        <>
+          <Box sx={{ borderBottom: 1, p: 2, borderColor: "grey.200" }}>
+            <Header
+              roleId={selectedRoleId}
+              role={selectedRole}
+              roles={roles}
+              roleLoading={roleLoading}
+              selectHandler={selectRoleIdHandler}
+              rolePermissionUpdateHandler={handleRolePermissionUpdate}
+            />
+          </Box>
+          {permissionsContent}
+        </>
+      );
+    } else {
+      rolesContent = <Typography component="h4">No role added yet.</Typography>;
+    }
+  }
+
   return (
     <Box
       component="main"
       sx={{
         border: "1px dashed grey",
         flexGrow: 1,
-        height: "100vh",
+        maxHeight: "100vh",
         overflow: "auto",
         borderRadius: 1,
       }}
     >
       <Stack direction="column" spacing={2} p={2}>
-        <Box sx={{ borderBottom: 1, p: 2, borderColor: "grey.200" }}>
-          {roleLoading || !roles ? (
-            <Skeleton height={80} />
-          ) : (
-            <Stack
-              direction={{ xs: "column", md: "row" }}
-              justifyContent="space-between"
-              spacing={2}
-            >
-              <Stack spacing={2} alignItems="center" direction="row">
-                <FormControl fullWidth>
-                  <InputLabel id="role">Role</InputLabel>
-                  <Select
-                    sx={{ textTransform: "capitalize" }}
-                    labelId="role-label"
-                    id="role"
-                    value={selectedRoleId}
-                    label="Role"
-                    onChange={selectRoleIdHandler}
-                  >
-                    {roles.map((role) => (
-                      <MenuItem
-                        sx={{ textTransform: "capitalize" }}
-                        key={role._id}
-                        value={role._id}
-                      >
-                        {role.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <Typography variant="h5" sx={{ textTransform: "capitalize" }}>
-                  {selectedRole.name}
-                </Typography>
-              </Stack>
-
-              <Stack direction="row" spacing={2} alignItems="center">
-                <Button
-                  fullWidth
-                  onClick={handleRolePermissionUpdate}
-                  size="medium"
-                  variant="outlined"
-                  sx={{ minWidth: 200 }}
-                  startIcon={<PublishedWithChanges />}
-                >
-                  Save Changes
-                </Button>
-
-                <Button
-                  fullWidth
-                  size="medium"
-                  variant="contained"
-                  startIcon={<Add />}
-                >
-                  Add
-                </Button>
-              </Stack>
-            </Stack>
-          )}
-        </Box>
-        <Box>
-          {permissionLoading || roleLoading || !permissions || !selectedRole ? (
-            <Skeleton height={200} />
-          ) : (
-            <Paper sx={{ width: "100%", overflow: "hidden" }}>
-              <TableContainer sx={{ maxHeight: 440 }}>
-                <Table stickyHeader aria-label="sticky table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Activity</TableCell>
-                      {headerCells.map((cell) => (
-                        <TableCell key={cell}>
-                          <FormControlLabel
-                            disabled={
-                              roleLoading ||
-                              permissionLoading ||
-                              !hasPermission("update_role")
-                            }
-                            onChange={(e) => checkAllHandler(e, cell)}
-                            id={cell}
-                            label={cell}
-                            control={
-                              <Checkbox
-                                indeterminate={checkForIndeterminate(cell)}
-                                checked={checkForAllChecked(cell)}
-                              />
-                            }
-                          />
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {groupPermissions().map((group) => (
-                      <TableRow key={group.name} hover role="checkbox">
-                        <TableCell>{group.name}</TableCell>
-                        {group.permissions.map((permission) => (
-                          <TableCell key={permission._id}>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  id={permission._id}
-                                  name={permission._id}
-                                  disabled={
-                                    roleLoading || !hasPermission("update_role")
-                                  }
-                                  checked={roleHasPermission(permission._id)}
-                                  onChange={(e) =>
-                                    checkIndividual(e, permission, group)
-                                  }
-                                />
-                              }
-                            />
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Paper>
-          )}
-        </Box>
+        {rolesContent}
       </Stack>
     </Box>
   );
