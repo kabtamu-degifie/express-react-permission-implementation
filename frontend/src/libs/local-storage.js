@@ -29,8 +29,12 @@ export function removeToken() {
 export function getDecodedToken() {
   const token = getToken();
   if (!token) return false;
-  const decode = jwtDecoder(token);
-  return decode;
+  const decode = jwtDecoder(token, { complete: true });
+
+  if (new Date(decode.exp) * 1000 > new Date().getTime()) {
+    return decode;
+  }
+  return false;
 }
 
 export function hasPermission(...permissions) {

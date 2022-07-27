@@ -4,13 +4,14 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import appTheme from "./theme";
 
-import Login from "./pages/login";
-import Register from "./pages/user";
-
 import PageContainer from "./layouts/PageContainer";
 import ProtectedRoute from "./ProtectedRoute";
+
+import Login from "./pages/login";
+import Register from "./pages/user";
+import Dashboard from "./pages/dashboard";
+import Home from "./pages/home";
 import Role from "./pages/role";
-import { Dashboard } from "@mui/icons-material";
 
 const App = () => {
   const { mode: theme } = useSelector((state) => state.theme);
@@ -22,6 +23,7 @@ const App = () => {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/" index element={<Home />} />
             <Route path="/" element={<PageContainer />}>
               <Route
                 path="dashboard"
@@ -34,7 +36,7 @@ const App = () => {
               <Route
                 path="role"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute permissions={["view_role"]}>
                     <Role />
                   </ProtectedRoute>
                 }

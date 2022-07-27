@@ -203,6 +203,8 @@ function Role() {
     );
   };
 
+  console.log(selectedRole);
+
   // Check that the permission is included in selected role
   const roleHasPermission = (permissionId) => {
     return (
