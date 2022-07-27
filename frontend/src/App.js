@@ -12,6 +12,8 @@ import Register from "./pages/user";
 import Dashboard from "./pages/dashboard";
 import Home from "./pages/home";
 import Role from "./pages/role";
+import PageNotFound from "./pages/404";
+import Unauthorized from "./pages/unuthorized";
 
 const App = () => {
   const { mode: theme } = useSelector((state) => state.theme);
@@ -21,28 +23,28 @@ const App = () => {
       <CssBaseline>
         <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/" index element={<Home />} />
-            <Route path="/" element={<PageContainer />}>
-              <Route
-                path="dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="role"
-                element={
-                  <ProtectedRoute permissions={["view_role"]}>
-                    <Role />
-                  </ProtectedRoute>
-                }
-              />
+            {/* public routes */}
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route path="/" element={<Home />} />
+
+            {/* we want to protect these routes */}
+            <Route element={<PageContainer />}>
+              <Route element={<ProtectedRoute />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+              </Route>
+
+              <Route element={<ProtectedRoute permissions={["view_role"]} />}>
+                <Route path="role" element={<Role />} />
+              </Route>
+
+              <Route element={<ProtectedRoute />}>
+                <Route path="unauthorized" element={<Unauthorized />} />
+              </Route>
             </Route>
-            <Route path="*" element={<h1>404! Page Not Found</h1>} />
+
+            {/* catch all */}
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </BrowserRouter>
       </CssBaseline>

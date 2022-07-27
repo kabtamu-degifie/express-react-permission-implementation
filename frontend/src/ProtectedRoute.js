@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, Outlet } from "react-router-dom";
 import { getLoggedInUser, hasPermission } from "./libs/local-storage";
 
 function ProtectedRoute(props) {
@@ -10,9 +10,14 @@ function ProtectedRoute(props) {
     isPermitted = hasPermission(...props.permissions);
   }
 
-  if (!isPermitted || !loggedInUser)
-    return <Navigate state={location.pathname} to="/login" replace />;
-  return props.children;
+  if (loggedInUser) {
+    if (!isPermitted) {
+      return <Navigate to="/unauthorized" />;
+    }
+    return <Outlet />;
+  } else {
+    return <Navigate state={location.pathname} to="/login" />;
+  }
 }
 
 export default ProtectedRoute;

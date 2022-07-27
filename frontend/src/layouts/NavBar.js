@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
@@ -48,7 +48,6 @@ function NavBar() {
           </IconButton>
           <Button
             onClick={logoutHandler}
-            href="#"
             variant="outlined"
             sx={{ my: 1, mx: 1.5 }}
           >

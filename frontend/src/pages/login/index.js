@@ -23,13 +23,16 @@ export default function SignIn() {
   );
 
   useEffect(() => {
-    if (isSuccess && token) {
-      dispatch(reset());
-      navigate(location.state ? location.state : "/");
-    }
-
     if (getLoggedInUser()) {
       navigate("/dashboard");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (isSuccess && token) {
+      dispatch(reset());
+      navigate(location.state ? location.state : "/dashboard");
     }
   }, [token, location, isSuccess, navigate, dispatch]);
 
@@ -55,7 +58,7 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign In
+          Sign in Project Name
         </Typography>
 
         {isError ? (
