@@ -3,7 +3,10 @@ import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { LightMode, Nightlight } from "@mui/icons-material";
+import {
+  LightModeOutlined,
+  NightlightRoundOutlined,
+} from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { NavLink } from "react-router-dom";
 
@@ -40,11 +43,21 @@ function NavBar() {
           </Typography>
 
           <nav>
-            <NavLink to="/role">Roles</NavLink>
+            <Button
+              sx={{ textTransform: "capitalize" }}
+              LinkComponent={NavLink}
+              to="/role"
+            >
+              Roles
+            </Button>
           </nav>
 
           <IconButton onClick={toggleThemeMode} aria-label="add an alarm">
-            {mode === "light" ? <Nightlight /> : <LightMode />}
+            {mode === "light" ? (
+              <NightlightRoundOutlined sx={{ transform: "rotate(-30deg)" }} />
+            ) : (
+              <LightModeOutlined />
+            )}
           </IconButton>
           <Button
             onClick={logoutHandler}

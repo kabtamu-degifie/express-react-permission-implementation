@@ -28,7 +28,10 @@ const App = () => {
             <Route path="register" element={<Register />} />
             <Route path="/" element={<Home />} />
 
-            {/* we want to protect these routes */}
+            {/* private routes */}
+            {/* authentication only: <ProtectedRoute/> */}
+            {/* authorization: <ProtectedRoute permissions={[permissionName]}/> */}
+
             <Route element={<PageContainer />}>
               <Route element={<ProtectedRoute />}>
                 <Route path="/dashboard" element={<Dashboard />} />
