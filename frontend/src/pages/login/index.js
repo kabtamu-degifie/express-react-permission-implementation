@@ -24,7 +24,7 @@ export default function SignIn() {
 
   useEffect(() => {
     if (getLoggedInUser()) {
-      navigate("/dashboard");
+      navigate("/");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -32,7 +32,7 @@ export default function SignIn() {
   useEffect(() => {
     if (isSuccess && token) {
       dispatch(reset());
-      navigate(location.state ? location.state : "/dashboard");
+      navigate(location.state ? location.state : "/");
     }
   }, [token, location, isSuccess, navigate, dispatch]);
 
