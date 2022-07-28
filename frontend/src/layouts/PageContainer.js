@@ -31,7 +31,17 @@ function PageContainer() {
       <MiniDrawer handleDrawerClose={handleDrawerClose} open={open} />
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Outlet />
+        <Box
+          sx={{
+            border: "1px dashed grey",
+            flexGrow: 1,
+            maxHeight: "100vh",
+            overflow: "auto",
+            borderRadius: 1,
+          }}
+        >
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );

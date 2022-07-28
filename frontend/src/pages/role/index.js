@@ -432,19 +432,9 @@ function Role() {
   }
 
   return (
-    <Box
-      sx={{
-        border: "1px dashed grey",
-        flexGrow: 1,
-        maxHeight: "100vh",
-        overflow: "auto",
-        borderRadius: 1,
-      }}
-    >
-      <Stack direction="column" spacing={2} p={2}>
-        {rolesContent}
-      </Stack>
-    </Box>
+    <Stack direction="column" spacing={2} p={2}>
+      {rolesContent}
+    </Stack>
   );
 }
 
