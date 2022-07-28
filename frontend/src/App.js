@@ -10,7 +10,6 @@ import ProtectedRoute from "./ProtectedRoute";
 import Login from "./pages/login";
 import Register from "./pages/user";
 import Dashboard from "./pages/dashboard";
-import Home from "./pages/home";
 import Role from "./pages/role";
 import PageNotFound from "./pages/404";
 import Unauthorized from "./pages/unuthorized";
@@ -26,7 +25,6 @@ const App = () => {
             {/* public routes */}
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
-            <Route path="/" element={<Home />} />
 
             {/* private routes */}
             {/* authentication only: <ProtectedRoute/> */}
@@ -34,7 +32,7 @@ const App = () => {
 
             <Route element={<PageContainer />}>
               <Route element={<ProtectedRoute />}>
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/" element={<Dashboard />} />
               </Route>
 
               <Route element={<ProtectedRoute permissions={["view_role"]} />}>

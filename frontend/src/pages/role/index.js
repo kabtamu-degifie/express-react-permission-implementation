@@ -433,7 +433,6 @@ function Role() {
 
   return (
     <Box
-      component="main"
       sx={{
         border: "1px dashed grey",
         flexGrow: 1,
