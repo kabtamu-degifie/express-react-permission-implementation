@@ -44,25 +44,25 @@ const menuItems = [
       },
     ],
   },
-  // {
-  //   id: 5,
-  //   text: "Accounts",
-  //   icon: <InboxIcon />,
-  //   children: [
-  //     {
-  //       id: 6,
-  //       url: "/role",
-  //       text: "Role",
-  //       icon: <MailIcon />,
-  //     },
-  //     {
-  //       id: 7,
-  //       url: "/user",
-  //       text: "User",
-  //       icon: <MailIcon />,
-  //     },
-  //   ],
-  // },
+  {
+    id: 5,
+    text: "Accounts 1",
+    icon: <InboxIcon />,
+    children: [
+      {
+        id: 6,
+        url: "/role",
+        text: "Role 1",
+        icon: <MailIcon />,
+      },
+      {
+        id: 7,
+        url: "/user",
+        text: "User 1",
+        icon: <MailIcon />,
+      },
+    ],
+  },
 ];
 
 export default function Drawer({
@@ -71,12 +71,23 @@ export default function Drawer({
   drawerWidth,
   DrawerHeader,
 }) {
-  const [openMenu, setOpenMenu] = React.useState(true);
+  const [openMenu, setOpenMenu] = React.useState([]);
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    setOpenMenu(!openMenu);
+  const handleClick = (menu) => {
+    const menus = [...openMenu];
+    const index = menus.indexOf(menu.id);
+    if (index !== -1) {
+      menus.splice(index, 1);
+    } else {
+      menus.push(menu.id);
+    }
+    setOpenMenu(menus);
+  };
+
+  const isSelectedMenu = (menu) => {
+    return openMenu.indexOf(menu.id) !== -1;
   };
 
   return (
@@ -108,16 +119,29 @@ export default function Drawer({
           if (menuItem && menuItem.children) {
             return (
               <React.Fragment key={menuItem.id}>
-                <ListItemButton onClick={handleClick}>
+                <ListItemButton dense onClick={() => handleClick(menuItem)}>
                   <ListItemIcon>{menuItem.icon}</ListItemIcon>
                   <ListItemText primary={menuItem.text} />
-                  {openMenu ? <ExpandMore /> : <ChevronRightIcon />}
+                  {isSelectedMenu(menuItem) ? (
+                    <ExpandMore />
+                  ) : (
+                    <ChevronRightIcon />
+                  )}
                 </ListItemButton>
-                <Collapse in={openMenu} timeout="auto" unmountOnExit>
+                <Collapse
+                  in={isSelectedMenu(menuItem)}
+                  timeout="auto"
+                  unmountOnExit
+                >
                   <List component="div" disablePadding>
                     {menuItem.children.map((childMenuItem) => {
                       return (
-                        <ListItemButton key={childMenuItem.id} sx={{ pl: 4 }}>
+                        <ListItemButton
+                          dense
+                          onClick={() => navigate(childMenuItem.url)}
+                          key={childMenuItem.id}
+                          sx={{ pl: 4 }}
+                        >
                           <ListItemIcon>{childMenuItem.icon}</ListItemIcon>
                           <ListItemText primary={childMenuItem.text} />
                         </ListItemButton>
@@ -129,12 +153,15 @@ export default function Drawer({
             );
           }
           return (
-            <ListItem key={menuItem.id} disablePadding>
-              <ListItemButton onClick={() => navigate(menuItem.url)}>
-                <ListItemIcon>{menuItem.icon}</ListItemIcon>
-                <ListItemText primary={menuItem.text} />
-              </ListItemButton>
-            </ListItem>
+            <ListItemButton
+              dense
+              key={menuItem.id}
+              disablePadding
+              onClick={() => navigate(menuItem.url)}
+            >
+              <ListItemIcon>{menuItem.icon}</ListItemIcon>
+              <ListItemText primary={menuItem.text} />
+            </ListItemButton>
           );
         })}
       </List>
