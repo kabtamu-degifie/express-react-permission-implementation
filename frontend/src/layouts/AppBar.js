@@ -2,15 +2,9 @@ import React from "react";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import {
-  LightModeOutlined,
-  Logout,
-  NightlightRoundOutlined,
-  PersonAdd,
-  Settings,
-  NotificationsNone,
-} from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
+
+import { styled } from "@mui/material/styles";
 import {
   Avatar,
   Box,
@@ -21,33 +15,37 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
-
-import { useNavigate } from "react-router-dom";
+import {
+  LightModeOutlined,
+  Logout,
+  NightlightRoundOutlined,
+  NotificationsNone,
+  PersonAdd,
+  Settings,
+} from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { setTheme } from "../services/theme/slice";
 import { logout } from "../services/auth/slice";
 
-const drawerWidth = 240;
-
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
+})(({ theme, open, drawerWidth }) => ({
+  transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
+    marginLeft: `${drawerWidth}px`,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
 }));
-export default function MiniAppBar({ handleDrawerOpen, open }) {
+
+export default function MiniAppBar({ handleDrawerOpen, open, drawerWidth }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { mode } = useSelector((state) => state.theme);
@@ -70,7 +68,7 @@ export default function MiniAppBar({ handleDrawerOpen, open }) {
     navigate("/login");
   };
   return (
-    <AppBar position="fixed" open={open}>
+    <AppBar position="fixed" open={open} drawerWidth={drawerWidth}>
       <Toolbar>
         <IconButton
           color="inherit"

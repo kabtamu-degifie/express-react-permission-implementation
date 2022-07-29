@@ -4,7 +4,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import appTheme from "./theme";
 
-import PageContainer from "./layouts/PageContainer";
+import PageLayout from "./layouts/PageLayout";
 import ProtectedRoute from "./ProtectedRoute";
 
 import Login from "./pages/login";
@@ -30,7 +30,7 @@ const App = () => {
             {/* authentication only: <ProtectedRoute/> */}
             {/* authorization: <ProtectedRoute permissions={[permissionName]}/> */}
 
-            <Route element={<PageContainer />}>
+            <Route element={<PageLayout />}>
               <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<Dashboard />} />
               </Route>
