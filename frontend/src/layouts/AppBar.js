@@ -28,7 +28,7 @@ import { useNavigate } from "react-router-dom";
 import { setTheme } from "../services/theme/slice";
 import { logout } from "../services/auth/slice";
 
-const AppBar = styled(MuiAppBar, {
+const CustomAppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open, drawerWidth }) => ({
   transition: theme.transitions.create(["margin", "width"], {
@@ -45,7 +45,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export default function MiniAppBar({ handleDrawerOpen, open, drawerWidth }) {
+export default function AppBar({ handleDrawerOpen, open, drawerWidth }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { mode } = useSelector((state) => state.theme);
@@ -68,7 +68,7 @@ export default function MiniAppBar({ handleDrawerOpen, open, drawerWidth }) {
     navigate("/login");
   };
   return (
-    <AppBar position="fixed" open={open} drawerWidth={drawerWidth}>
+    <CustomAppBar position="fixed" open={open} drawerWidth={drawerWidth}>
       <Toolbar>
         <IconButton
           color="inherit"
@@ -174,6 +174,6 @@ export default function MiniAppBar({ handleDrawerOpen, open, drawerWidth }) {
           </MenuItem>
         </Menu>
       </Toolbar>
-    </AppBar>
+    </CustomAppBar>
   );
 }

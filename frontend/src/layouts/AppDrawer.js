@@ -12,9 +12,8 @@ import ListItemText from "@mui/material/ListItemText";
 
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import Drawer from "@mui/material/Drawer";
+import MuiDrawer from "@mui/material/Drawer";
 import { useNavigate } from "react-router-dom";
 import { Collapse } from "@mui/material";
 
@@ -45,9 +44,28 @@ const menuItems = [
       },
     ],
   },
+  // {
+  //   id: 5,
+  //   text: "Accounts",
+  //   icon: <InboxIcon />,
+  //   children: [
+  //     {
+  //       id: 6,
+  //       url: "/role",
+  //       text: "Role",
+  //       icon: <MailIcon />,
+  //     },
+  //     {
+  //       id: 7,
+  //       url: "/user",
+  //       text: "User",
+  //       icon: <MailIcon />,
+  //     },
+  //   ],
+  // },
 ];
 
-export default function MiniDrawer({
+export default function Drawer({
   handleDrawerClose,
   open,
   drawerWidth,
@@ -62,7 +80,7 @@ export default function MiniDrawer({
   };
 
   return (
-    <Drawer
+    <MuiDrawer
       sx={{
         width: drawerWidth,
         flexShrink: 0,
@@ -88,27 +106,27 @@ export default function MiniDrawer({
       <List>
         {menuItems.map((menuItem) => {
           if (menuItem && menuItem.children) {
-            return menuItem.children.map((child) => {
-              return (
-                <>
-                  <ListItemButton onClick={handleClick}>
-                    <ListItemIcon>{menuItem.icon}</ListItemIcon>
-                    <ListItemText primary={menuItem.text} />
-                    {openMenu ? <ExpandMore /> : <ChevronRightIcon />}
-                  </ListItemButton>
-                  <Collapse in={openMenu} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                      <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                          <StarBorderIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Starred" />
-                      </ListItemButton>
-                    </List>
-                  </Collapse>
-                </>
-              );
-            });
+            return (
+              <React.Fragment key={menuItem.id}>
+                <ListItemButton onClick={handleClick}>
+                  <ListItemIcon>{menuItem.icon}</ListItemIcon>
+                  <ListItemText primary={menuItem.text} />
+                  {openMenu ? <ExpandMore /> : <ChevronRightIcon />}
+                </ListItemButton>
+                <Collapse in={openMenu} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {menuItem.children.map((childMenuItem) => {
+                      return (
+                        <ListItemButton key={childMenuItem.id} sx={{ pl: 4 }}>
+                          <ListItemIcon>{childMenuItem.icon}</ListItemIcon>
+                          <ListItemText primary={childMenuItem.text} />
+                        </ListItemButton>
+                      );
+                    })}
+                  </List>
+                </Collapse>
+              </React.Fragment>
+            );
           }
           return (
             <ListItem key={menuItem.id} disablePadding>
@@ -120,6 +138,6 @@ export default function MiniDrawer({
           );
         })}
       </List>
-    </Drawer>
+    </MuiDrawer>
   );
 }
