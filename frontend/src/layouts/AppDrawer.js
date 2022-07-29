@@ -5,8 +5,7 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
+import MuiListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
@@ -14,8 +13,8 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import MuiDrawer from "@mui/material/Drawer";
-import { useNavigate } from "react-router-dom";
-import { Collapse } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Collapse, styled } from "@mui/material";
 
 const menuItems = [
   {
@@ -51,13 +50,13 @@ const menuItems = [
     children: [
       {
         id: 6,
-        url: "/role",
+        url: "/role1",
         text: "Role 1",
         icon: <MailIcon />,
       },
       {
         id: 7,
-        url: "/user",
+        url: "/user1",
         text: "User 1",
         icon: <MailIcon />,
       },
@@ -68,12 +67,13 @@ const menuItems = [
 export default function Drawer({
   handleDrawerClose,
   open,
-  drawerWidth,
+  drawerwidth,
   DrawerHeader,
 }) {
   const [openMenu, setOpenMenu] = React.useState([]);
   const theme = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClick = (menu) => {
     const menus = [...openMenu];
@@ -90,13 +90,31 @@ export default function Drawer({
     return openMenu.indexOf(menu.id) !== -1;
   };
 
+  const ListItemButton = styled(MuiListItemButton)(({ theme }) => {
+    return {
+      "&.Mui-selected": {
+        backgroundColor: "transparent",
+        color: theme.palette.primary.main,
+
+        ".MuiListItemIcon-root": {
+          backgroundColor: "transparent",
+          color: theme.palette.primary.main,
+        },
+
+        "& span, & svg": {
+          fontWeight: "bold",
+        },
+      },
+    };
+  });
+
   return (
     <MuiDrawer
       sx={{
-        width: drawerWidth,
+        width: drawerwidth,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: drawerWidth,
+          width: drawerwidth,
           boxSizing: "border-box",
         },
       }}
@@ -119,7 +137,14 @@ export default function Drawer({
           if (menuItem && menuItem.children) {
             return (
               <React.Fragment key={menuItem.id}>
-                <ListItemButton dense onClick={() => handleClick(menuItem)}>
+                <ListItemButton
+                  disableRipple
+                  selected={menuItem.children.some(
+                    (child) => child.url === location.pathname
+                  )}
+                  dense
+                  onClick={() => handleClick(menuItem)}
+                >
                   <ListItemIcon>{menuItem.icon}</ListItemIcon>
                   <ListItemText primary={menuItem.text} />
                   {isSelectedMenu(menuItem) ? (
@@ -137,7 +162,9 @@ export default function Drawer({
                     {menuItem.children.map((childMenuItem) => {
                       return (
                         <ListItemButton
+                          disableRipple
                           dense
+                          selected={childMenuItem.url === location.pathname}
                           onClick={() => navigate(childMenuItem.url)}
                           key={childMenuItem.id}
                           sx={{ pl: 4 }}
@@ -154,10 +181,11 @@ export default function Drawer({
           }
           return (
             <ListItemButton
+              disableRipple
               dense
               key={menuItem.id}
-              disablePadding
               onClick={() => navigate(menuItem.url)}
+              selected={menuItem.url === location.pathname}
             >
               <ListItemIcon>{menuItem.icon}</ListItemIcon>
               <ListItemText primary={menuItem.text} />

@@ -30,14 +30,14 @@ import { logout } from "../services/auth/slice";
 
 const CustomAppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open, drawerWidth }) => ({
+})(({ theme, open, drawerwidth }) => ({
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
+    width: `calc(100% - ${drawerwidth}px)`,
+    marginLeft: `${drawerwidth}px`,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
@@ -45,7 +45,7 @@ const CustomAppBar = styled(MuiAppBar, {
   }),
 }));
 
-export default function AppBar({ handleDrawerOpen, open, drawerWidth }) {
+export default function AppBar({ handleDrawerOpen, open, drawerwidth }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { mode } = useSelector((state) => state.theme);
@@ -68,7 +68,7 @@ export default function AppBar({ handleDrawerOpen, open, drawerWidth }) {
     navigate("/login");
   };
   return (
-    <CustomAppBar position="fixed" open={open} drawerWidth={drawerWidth}>
+    <CustomAppBar position="fixed" open={open} drawerwidth={drawerwidth}>
       <Toolbar>
         <IconButton
           color="inherit"

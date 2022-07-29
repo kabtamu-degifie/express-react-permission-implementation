@@ -52,12 +52,12 @@ function PageLayout() {
       <AppBar
         handleDrawerOpen={handleDrawerOpen}
         open={open}
-        drawerWidth={drawerWidth}
+        drawerwidth={drawerWidth}
       />
       <AppDrawer
         handleDrawerClose={handleDrawerClose}
         open={open}
-        drawerWidth={drawerWidth}
+        drawerwidth={drawerWidth}
         DrawerHeader={DrawerHeader}
       />
 

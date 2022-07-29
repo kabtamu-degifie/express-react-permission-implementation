@@ -11,6 +11,7 @@ import Login from "./pages/login";
 import Register from "./pages/user";
 import Dashboard from "./pages/dashboard";
 import Role from "./pages/role";
+import User from "./pages/user";
 import PageNotFound from "./pages/404";
 import Unauthorized from "./pages/unuthorized";
 
@@ -34,7 +35,9 @@ const App = () => {
               <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<Dashboard />} />
               </Route>
-
+              <Route element={<ProtectedRoute />}>
+                <Route path="/user" element={<User />} />
+              </Route>
               <Route element={<ProtectedRoute permissions={["view_role"]} />}>
                 <Route path="role" element={<Role />} />
               </Route>
