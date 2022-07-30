@@ -30,7 +30,6 @@ const App = () => {
             {/* private routes */}
             {/* authentication: <ProtectedRoute/> */}
             {/* authorization: <ProtectedRoute permissions={[permissionName1, PermissionName2]}/> */}
-
             <Route element={<PageLayout />}>
               <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<Dashboard />} />
