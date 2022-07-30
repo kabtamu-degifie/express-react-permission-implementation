@@ -41,7 +41,6 @@ const App = () => {
               <Route element={<ProtectedRoute permissions={["view_role"]} />}>
                 <Route path="role" element={<Role />} />
               </Route>
-
               <Route element={<ProtectedRoute />}>
                 <Route path="unauthorized" element={<Unauthorized />} />
               </Route>
