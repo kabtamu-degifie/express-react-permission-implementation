@@ -28,15 +28,15 @@ const App = () => {
             <Route path="register" element={<Register />} />
 
             {/* private routes */}
-            {/* authentication only: <ProtectedRoute/> */}
-            {/* authorization: <ProtectedRoute permissions={[permissionName]}/> */}
+            {/* authentication: <ProtectedRoute/> */}
+            {/* authorization: <ProtectedRoute permissions={[permissionName1, PermissionName2]}/> */}
 
             <Route element={<PageLayout />}>
               <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<Dashboard />} />
               </Route>
               <Route element={<ProtectedRoute />}>
-                <Route path="/user" element={<User />} />
+                <Route path="user" element={<User />} />
               </Route>
               <Route element={<ProtectedRoute permissions={["view_role"]} />}>
                 <Route path="role" element={<Role />} />
